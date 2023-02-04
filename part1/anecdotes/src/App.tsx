@@ -23,6 +23,7 @@ function App() {
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <div>{anecdotes[selected]}</div>
       <div>has {votes[selected]} votes</div>
       <div>
@@ -40,6 +41,8 @@ function App() {
           Next anecdote
         </button>
       </div>
+      <h2>Anecdote with most votes</h2>
+      <div>{anecdotes[votes.indexOf(Math.max(...votes))]}</div>
     </div>
   );
 }
