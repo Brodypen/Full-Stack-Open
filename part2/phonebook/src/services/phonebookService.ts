@@ -11,9 +11,15 @@ const add = (newPerson: any) => {
     const request = axios.post(baseUrl, newPerson)
     return request.then(response => response.data)
 }
+const deletePerson = (id: number) => {
+    console.log('delete')
+    const request = axios.delete(`${baseUrl}/${id}`)
+    return request.then(response => response.data)
+};
       
       
 export default {
     getAll,
-    add
+    add,
+    deletePerson
 }

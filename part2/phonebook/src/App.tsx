@@ -7,6 +7,7 @@ import phonebookService from "./services/phonebookService";
 type personProps ={
   name: string
   number: string
+  id: number
 }
 const App = () => {
     const [persons, setPersons] = useState<personProps[]>(new Array<personProps>());
@@ -28,13 +29,24 @@ const App = () => {
     };
     
     phonebookService.add(personObject).then((response) => {
-      console.log("response: ", response);
+      // console.log("response: ", response);
       setPersons(persons.concat(response));
       setNewName("");
     setNewNumber("");
     setNewFilter("");
     });
   };
+  const onDelete = (id: number) => {
+    console.log("Delete:",id);
+    const person = persons.find((person) => person.id === id);
+    if (person) {
+      if (window.confirm(`Delete ${person.name}?`)) {
+        phonebookService.deletePerson(id).then((response) => {
+          setPersons(persons.filter((person) => person.id !== id));
+        });
+      }
+    }
+  }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewName(event.target.value);
@@ -73,7 +85,8 @@ const App = () => {
       <h2>Numbers</h2>
       {persons && <Persons
         persons={persons}
-        newFilter={newFilter} />}
+        newFilter={newFilter}
+        onDelete={onDelete} />}
     </div>
   );
 };
