@@ -1,32 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-
+import axios from "axios";
+type personProps ={
+  name: string
+  number: string
+}
 const App = () => {
-    const [persons, setPersons] = useState([
-      { name: "Arto Hellas", number: "040-123456" },
-      { name: "Ada Lovelace", number: "39-44-5323523"},
-      { name: "Dan Abramov", number: "12-43-234345"},
-      { name: "Mary Poppendieck", number: "39-23-6423122"},
-    ]);
+    const [persons, setPersons] = useState<personProps[]>(new Array<personProps>());
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newFilter, setNewFilter] = useState("");
 
   const addPerson = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (persons.find((person) => person.name === newName)) {
+    
+    if (persons?.find((person) => person.name === newName)) {
       alert(`${newName} is already added to phonebook`);
       return;
     }
+    console.log("hey1");
     const personObject = {
       name: newName,
       number: newNumber,
     };
-    setPersons(persons.concat(personObject));
+    console.log("hey00");
+    setPersons(persons?.concat(personObject));
     setNewName("");
+    setNewNumber("");
     setNewFilter("");
+    console.log("hey0");
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,6 +42,14 @@ const App = () => {
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewFilter(event.target.value);
   };
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      
+      setPersons(response.data);
+    });
+    console.log("promise fulfilled");
+  }, []);
 
   return (
     <div>
@@ -55,9 +67,9 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons
+      {persons && <Persons
         persons={persons}
-        newFilter={newFilter} />
+        newFilter={newFilter} />}
     </div>
   );
 };
