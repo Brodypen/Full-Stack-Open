@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
-import axios from "axios";
+import phonebookService from "./services/phonebookService";
+
 type personProps ={
   name: string
   number: string
@@ -25,12 +26,14 @@ const App = () => {
       name: newName,
       number: newNumber,
     };
-    console.log("hey00");
-    setPersons(persons?.concat(personObject));
-    setNewName("");
+    
+    phonebookService.add(personObject).then((response) => {
+      console.log("response: ", response);
+      setPersons(persons.concat(response));
+      setNewName("");
     setNewNumber("");
     setNewFilter("");
-    console.log("hey0");
+    });
   };
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,9 +47,10 @@ const App = () => {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      
-      setPersons(response.data);
+    phonebookService.getAll().then((response) => {
+      console.log("response: ", response);
+    setPersons(response);
+    
     });
     console.log("promise fulfilled");
   }, []);
