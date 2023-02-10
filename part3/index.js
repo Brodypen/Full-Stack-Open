@@ -25,8 +25,12 @@ const phonebook = [
   },
 ];
 app.get("/", (request, response) => {
-    response.json(phonebook);
-
+  response.json(phonebook);
+});
+app.get("/info", (request, response) => {
+    const date = new Date();
+    const numberOfPeople = phonebook.length;
+  response.send("<p>Phone book has info for " + numberOfPeople + " people</p>" + date);
 });
 
 const PORT = 3001;
