@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const phonebook = [
+let phonebook = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -31,6 +31,20 @@ app.get("/info", (request, response) => {
     const date = new Date();
     const numberOfPeople = phonebook.length;
   response.send("<p>Phone book has info for " + numberOfPeople + " people</p>" + date);
+});
+app.get("/api/persons/:id", (request, response) => {
+    const id = Number(request.params.id);
+    const person = phonebook.find(person => person.id === id);
+    if (person) {
+        response.json(person);
+    } else {
+        response.status(404).end();
+    }
+});
+app.delete("/api/persons/:id", (request, response) => {
+    const id = Number(request.params.id);
+    phonebook = phonebook.filter(person => person.id !== id);
+    response.status(204).end();
 });
 
 const PORT = 3001;
